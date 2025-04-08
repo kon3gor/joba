@@ -1,8 +1,8 @@
-package scrapper
+package pkg
 
 import "fmt"
 
-type Result interface {
+type ScrapResult interface {
 	fmt.Stringer
 
 	GetID() string
@@ -10,5 +10,5 @@ type Result interface {
 }
 
 type Scrapper interface {
-	Scrap() ([]Result, error)
+	Scrap() ([]ScrapResult, error)
 }

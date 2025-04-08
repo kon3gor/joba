@@ -19,7 +19,6 @@ FROM alpine:latest
 
 # Copy the Go binary from the builder stage
 COPY --from=builder /app/joba /joba
-COPY --from=builder /app/config.yaml /config.yaml
 
 # Command to run the Go binary
 ENTRYPOINT ["/joba"]

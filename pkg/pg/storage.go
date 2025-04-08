@@ -9,6 +9,8 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/kon3gor/joba/pkg"
+	"github.com/kon3gor/joba/pkg/util"
 )
 
 type Config struct {
@@ -22,8 +24,8 @@ type Storage struct {
 	db *pgxpool.Pool
 }
 
-func NewStorage(ctx context.Context, c Config) (*Storage, func(), error) {
-	pool, err := pgxpool.New(ctx, fmt.Sprintf("postgres://%s:%s@%s/%s", c.User, c.Password, c.Address, c.DBName))
+func NewStorage(ctx context.Context, c Config) (pkg.Storage, func(), error) {
+	pool, err := pgxpool.New(ctx, fmt.Sprintf("postgres://%s:%s@%s/%s", c.User, util.GetRealValue(c.Password), c.Address, c.DBName))
 	if err != nil {
 		return nil, nil, err
 	}

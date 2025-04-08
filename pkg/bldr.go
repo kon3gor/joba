@@ -1,19 +1,14 @@
-package alert
+package pkg
 
 import (
 	"time"
-
-	"github.com/kon3gor/joba/pkg/channel"
-	"github.com/kon3gor/joba/pkg/formatter"
-	"github.com/kon3gor/joba/pkg/scrapper"
-	"github.com/kon3gor/joba/pkg/storage"
 )
 
 type AlertBuilder interface {
-	ScrapUsing(scrapper.Scrapper) AlertBuilder
+	ScrapUsing(Scrapper) AlertBuilder
 	Every(time.Duration) AlertBuilder
-	FormatUsing(formatter.F) AlertBuilder
-	SendInto(channel.C) AlertBuilder
+	FormatUsing(Formatter) AlertBuilder
+	SendInto(Channel) AlertBuilder
 	Build() *JobAlert
 
 	SkipInitial(bool) AlertBuilder
@@ -23,7 +18,7 @@ type alertBuilder struct {
 	alert *JobAlert
 }
 
-func NewAlert(id string, s storage.S) AlertBuilder {
+func NewJobAlert(id string, s Storage) AlertBuilder {
 	return &alertBuilder{
 		alert: &JobAlert{
 			ID:      id,
@@ -32,7 +27,7 @@ func NewAlert(id string, s storage.S) AlertBuilder {
 	}
 }
 
-func (ab *alertBuilder) ScrapUsing(s scrapper.Scrapper) AlertBuilder {
+func (ab *alertBuilder) ScrapUsing(s Scrapper) AlertBuilder {
 	ab.alert.scrapper = s
 	return ab
 }
@@ -42,12 +37,12 @@ func (ab *alertBuilder) Every(d time.Duration) AlertBuilder {
 	return ab
 }
 
-func (ab *alertBuilder) FormatUsing(formatter formatter.F) AlertBuilder {
+func (ab *alertBuilder) FormatUsing(formatter Formatter) AlertBuilder {
 	ab.alert.foramtter = formatter
 	return ab
 }
 
-func (ab *alertBuilder) SendInto(c channel.C) AlertBuilder {
+func (ab *alertBuilder) SendInto(c Channel) AlertBuilder {
 	ab.alert.channel = c
 	return ab
 }

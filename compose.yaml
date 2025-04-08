@@ -6,12 +6,18 @@ services:
     depends_on:
       - pgdb
     restart: on-failure
+    environment:
+      TG_TOKEN: ${TG_TOKEN}
+      TG_CHAT_ID: ${TG_CHAT_ID}
+      PG_PASSWORD: ${PG_PASSWORD}
+    volumes:
+      - ./config.yaml:/config.yaml
 
   pgdb:
     image: postgres:latest
     environment:
       POSTGRES_USER: "jopa"
-      POSTGRES_PASSWORD: "changeme"
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: "job_alerts"
     volumes:
       - db_data:/var/lib/postgresql/data

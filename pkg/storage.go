@@ -1,8 +1,8 @@
-package storage
+package pkg
 
 import "context"
 
-type S interface {
+type Storage interface {
 	Intersect(context.Context, string, []string) ([]string, error)
 	Save(context.Context, string, []string) error
 }

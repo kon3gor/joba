@@ -1,49 +1,20 @@
-package alert
+package pkg
 
 import (
 	"context"
 	"slices"
 	"time"
-
-	"github.com/google/uuid"
-
-	"github.com/kon3gor/joba/pkg/channel"
-	"github.com/kon3gor/joba/pkg/formatter"
-	"github.com/kon3gor/joba/pkg/scrapper"
-	"github.com/kon3gor/joba/pkg/storage"
 )
 
 type JobAlert struct {
 	ID          string
-	scrapper    scrapper.Scrapper
-	channel     channel.C
+	scrapper    Scrapper
+	channel     Channel
 	checkPeriod time.Duration
-	storage     storage.S
-	foramtter   formatter.F
+	storage     Storage
+	foramtter   Formatter
 
 	skipInitial bool
-}
-
-func NewJobAlert(
-	scrap scrapper.Scrapper,
-	every time.Duration,
-	into channel.C,
-	storage storage.S,
-	foramtter formatter.F,
-) (*JobAlert, error) {
-	id, err := uuid.NewV6()
-	if err != nil {
-		return nil, err
-	}
-
-	return &JobAlert{
-		ID:          id.String(),
-		scrapper:    scrap,
-		channel:     into,
-		checkPeriod: every,
-		storage:     storage,
-		foramtter:   foramtter,
-	}, nil
 }
 
 func (ja *JobAlert) Run(ctx context.Context) error {
@@ -80,7 +51,7 @@ func (ja *JobAlert) perform(ctx context.Context) error {
 		return err
 	}
 
-	filteredResults := make([]scrapper.Result, 0, len(filteredIds))
+	filteredResults := make([]ScrapResult, 0, len(filteredIds))
 	for _, res := range results {
 		if slices.Contains(filteredIds, res.GetID()) {
 			filteredResults = append(filteredResults, res)
@@ -96,7 +67,7 @@ func (ja *JobAlert) perform(ctx context.Context) error {
 		goto save
 	}
 
-	if err := ja.channel.SendMessage(ja.foramtter.Format(filteredResults)); err != nil {
+	if err := ja.channel.SendMessage(ctx, ja.foramtter.Format(filteredResults)); err != nil {
 		return err
 	}
 

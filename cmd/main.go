@@ -8,12 +8,10 @@ import (
 
 	"github.com/kon3gor/gondor"
 
-	"github.com/kon3gor/joba/pkg/alert"
-	"github.com/kon3gor/joba/pkg/channel/tg"
-	"github.com/kon3gor/joba/pkg/engine"
-	"github.com/kon3gor/joba/pkg/scrapper"
-	"github.com/kon3gor/joba/pkg/scrapper/google"
-	"github.com/kon3gor/joba/pkg/storage/pg"
+	"github.com/kon3gor/joba/pkg"
+	"github.com/kon3gor/joba/pkg/google"
+	"github.com/kon3gor/joba/pkg/pg"
+	"github.com/kon3gor/joba/pkg/tg"
 )
 
 var config struct {
@@ -41,16 +39,16 @@ func main() {
 
 	tgch := tg.NewChannel(config.Telegram)
 
-	googleJobAlert := alert.
-		NewAlert(config.Google.ID, st).
+	googleJobAlert := pkg.
+		NewJobAlert(config.Google.ID, st).
 		ScrapUsing(gc).
-		Every(1 * time.Hour).
+		Every(5 * time.Second).
 		FormatUsing(SimpleFormatter{}).
 		SendInto(tgch).
-		SkipInitial(true).
+		SkipInitial(false).
 		Build()
 
-	engine := engine.NewEngine(googleJobAlert)
+	engine := pkg.NewEngine(googleJobAlert)
 	if err := engine.Run(context.Background()); err != nil {
 		log.Fatalln(err)
 	}
@@ -59,7 +57,7 @@ func main() {
 type SimpleFormatter struct {
 }
 
-func (sf SimpleFormatter) Format(r []scrapper.Result) string {
+func (sf SimpleFormatter) Format(r []pkg.ScrapResult) string {
 	var msg strings.Builder
 
 	msg.WriteString("New jobs!!!!\n")

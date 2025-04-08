@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/kon3gor/joba/pkg/scrapper"
+	"github.com/kon3gor/joba/pkg"
 	"golang.org/x/xerrors"
 )
 
@@ -43,18 +43,18 @@ func (r Result) GetAdditionalInfo() struct{} {
 	return struct{}{}
 }
 
-func NewScrapper(query string, pageLimit int) scrapper.Scrapper {
+func NewScrapper(query string, pageLimit int) pkg.Scrapper {
 	return &Scrapper{
 		query:     query,
 		pageLimit: pageLimit,
 	}
 }
 
-func (s *Scrapper) Scrap() ([]scrapper.Result, error) {
+func (s *Scrapper) Scrap() ([]pkg.ScrapResult, error) {
 	var err error
-	var res []scrapper.Result
+	var res []pkg.ScrapResult
 
-	total := make([]scrapper.Result, 0, 100)
+	total := make([]pkg.ScrapResult, 0, s.pageLimit*10)
 	page := 1
 	for err == nil && page <= s.pageLimit {
 		res, err = s.scrap(page)
@@ -70,7 +70,7 @@ func (s *Scrapper) Scrap() ([]scrapper.Result, error) {
 	return total, nil
 }
 
-func (s *Scrapper) scrap(page int) ([]scrapper.Result, error) {
+func (s *Scrapper) scrap(page int) ([]pkg.ScrapResult, error) {
 	req, err := http.NewRequest(http.MethodGet, s.query, nil)
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func (s *Scrapper) scrap(page int) ([]scrapper.Result, error) {
 		return nil, err
 	}
 
-	result := make([]scrapper.Result, 0)
+	result := make([]pkg.ScrapResult, 0)
 
 	doc.Find(".lLd3Je").Each(func(i int, s *goquery.Selection) {
 		title := s.Find(".QJPWVe").Text()

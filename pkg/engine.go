@@ -1,24 +1,23 @@
-package engine
+package pkg
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/kon3gor/joba/pkg/alert"
 	"golang.org/x/xerrors"
 )
 
-type E struct {
-	alerts []*alert.JobAlert
+type Engine struct {
+	alerts []*JobAlert
 }
 
-func NewEngine(alerts ...*alert.JobAlert) *E {
-	return &E{
+func NewEngine(alerts ...*JobAlert) *Engine {
+	return &Engine{
 		alerts: alerts,
 	}
 }
 
-func (e *E) Run(ctx context.Context) error {
+func (e *Engine) Run(ctx context.Context) error {
 	alertErrs := make(chan error, len(e.alerts))
 	defer close(alertErrs)
 
@@ -48,7 +47,7 @@ func (e *E) Run(ctx context.Context) error {
 	return xerrors.New("all alerts failed")
 }
 
-func (e *E) runIndividual(ctx context.Context, alert *alert.JobAlert, errCh chan<- error) {
+func (e *Engine) runIndividual(ctx context.Context, alert *JobAlert, errCh chan<- error) {
 	err := alert.Run(ctx)
 	if err != nil {
 		errCh <- err

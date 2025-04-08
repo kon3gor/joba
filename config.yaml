@@ -5,10 +5,10 @@ google:
 
 db:
   user: "jopa"
-  password: "evn:PG_PASSWORD"
+  password: "env:PG_PASSWORD"
   address: "pgdb:5432"
   db-name: "job_alerts"
 
-teelgram:
+telegram:
   token: "env:TG_TOKEN"
   chat-id: "env:TG_CHAT_ID"

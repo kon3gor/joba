@@ -1,13 +1,15 @@
 package tg
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
 
-	"github.com/kon3gor/joba/pkg/channel"
-	"github.com/kon3gor/joba/pkg/util"
 	"golang.org/x/xerrors"
+
+	"github.com/kon3gor/joba/pkg"
+	"github.com/kon3gor/joba/pkg/util"
 )
 
 type Config struct {
@@ -19,13 +21,13 @@ type Channel struct {
 	c Config
 }
 
-func NewChannel(c Config) channel.C {
+func NewChannel(c Config) pkg.Channel {
 	return &Channel{
 		c: c,
 	}
 }
 
-func (c *Channel) SendMessage(msg string) error {
+func (c *Channel) SendMessage(ctx context.Context, msg string) error {
 	baseURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", util.GetRealValue(c.c.Token))
 
 	data := url.Values{}
