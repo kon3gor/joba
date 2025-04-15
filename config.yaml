@@ -1,12 +1,14 @@
-google:
-  id: "google-backend-job-alert"
-  page-limit: 1
-  link: "https://www.google.com/about/careers/applications/jobs/results?q=%22Software%20Engineer%20III%22&jlo=en-GB&location=Zurich%2C%20Switzerland&location=New%20York%2C%20NY%2C%20USA&location=California%2C%20USA&skills=backend"
+alerts:
+  google:
+    id: "google-backend-job-alert"
+    page-limit: 1
+    link: "https://www.google.com/about/careers/applications/jobs/results?q=%22Software%20Engineer%20III%22&jlo=en-GB&location=Zurich%2C%20Switzerland&location=New%20York%2C%20NY%2C%20USA&location=California%2C%20USA&skills=backend"
+    period: "1h"
 
 db:
   user: "jopa"
   password: "env:PG_PASSWORD"
-  address: "pgdb:5432"
+  address: "env:PG_ADDRESS"
   db-name: "job_alerts"
 
 telegram:

@@ -9,7 +9,6 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/kon3gor/joba/pkg"
-	"github.com/kon3gor/joba/pkg/util"
 )
 
 type Config struct {
@@ -28,10 +27,10 @@ func NewChannel(c Config) pkg.Channel {
 }
 
 func (c *Channel) SendMessage(ctx context.Context, msg string) error {
-	baseURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", util.GetRealValue(c.c.Token))
+	baseURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", c.c.Token)
 
 	data := url.Values{}
-	data.Set("chat_id", util.GetRealValue(c.c.ChatID))
+	data.Set("chat_id", c.c.ChatID)
 	data.Set("text", msg)
 
 	// Send the HTTP POST request

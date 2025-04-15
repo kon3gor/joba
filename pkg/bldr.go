@@ -11,7 +11,7 @@ type AlertBuilder interface {
 	SendInto(Channel) AlertBuilder
 	Build() *JobAlert
 
-	SkipInitial(bool) AlertBuilder
+	SkipInitial() AlertBuilder
 }
 
 type alertBuilder struct {
@@ -67,7 +67,7 @@ func (ab *alertBuilder) Build() *JobAlert {
 	return ab.alert
 }
 
-func (ab *alertBuilder) SkipInitial(skip bool) AlertBuilder {
-	ab.alert.skipInitial = skip
+func (ab *alertBuilder) SkipInitial() AlertBuilder {
+	ab.alert.skipInitial = true
 	return ab
 }
